@@ -15,6 +15,7 @@ enum class SimSemaphoreKind { Mutex, Binary };
 struct SimSemaphoreBase {
   const SimSemaphoreKind kind;
   explicit SimSemaphoreBase(SimSemaphoreKind k) : kind(k) {}
+  virtual ~SimSemaphoreBase() = default;
 };
 
 // Use a real recursive mutex for the rendering semaphore.
@@ -41,9 +42,9 @@ typedef SimSemaphoreBase *SemaphoreHandle_t;
 
 namespace sim_semaphore_detail {
 
-// Single non-virtual base, so a tag-checked downcast is exact. Nothing frees a
-// handle in this shim (there is no vSemaphoreDelete), so no base-pointer delete
-// happens and the base needs no virtual destructor.
+// Single non-virtual base, so a tag-checked downcast is exact. The virtual
+// destructor (see vSemaphoreDelete) lets deleted handles dispatch to the
+// exact derived type.
 inline SimMutex *asMutex(SemaphoreHandle_t sem) {
   return static_cast<SimMutex *>(sem);
 }
@@ -146,4 +147,13 @@ inline int xQueuePeek(SemaphoreHandle_t sem, void *, uint32_t) {
     return pdTRUE;
   }
   return pdFALSE;
+}
+
+// vSemaphoreDelete destroys a semaphore created by xSemaphoreCreateMutex or
+// xSemaphoreCreateBinary. The shim hands out heap objects, so deletion is a
+// delete on the tagged base (virtual destructor dispatches to the exact type).
+inline void vSemaphoreDelete(SemaphoreHandle_t sem) {
+  if (!sem)
+    return;
+  delete sem;
 }
