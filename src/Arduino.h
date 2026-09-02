@@ -31,13 +31,16 @@ inline unsigned long micros() {
 }
 
 inline void delay(unsigned long ms) {
-  std::this_thread::sleep_for(std::chrono::milliseconds(ms));
-}
 inline void yield() { std::this_thread::yield(); }
 
 // Native builds have no GPIO pins. Treat every input as released, matching the
 // idle pull-up state used by the button diagnostics in firmware startup.
 inline int digitalRead(int /*pin*/) { return 1; }
+
+// ESP32 CPU frequency control. The native device forces 160 MHz early in
+// setup(); the simulator has no clock, so this is a read-only no-op.
+inline void setCpuFrequencyMhz(uint32_t /*mhz*/) {}
+inline uint32_t getCpuFrequencyMhz() { return 160; }
 
 #include "HardwareSerial.h"
 #include "Print.h"

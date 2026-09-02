@@ -777,4 +777,6 @@ void HalGPIO::startDeepSleep() {
 }
 bool HalGPIO::verifyPowerButtonWakeup() { return true; }
 
+bool HalGPIO::verifyPowerButtonWakeup(uint16_t /*requiredHoldMs*/, bool /*shortPressIsSleep*/) { return true; }
+
 HalGPIO gpio;

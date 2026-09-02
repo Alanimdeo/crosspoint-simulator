@@ -94,6 +94,9 @@ public:
   // Verify power button was held long enough after wakeup.
   // The host wake path is synthetic, so verification always succeeds.
   bool verifyPowerButtonWakeup();
+  // Korean-fork signing: power-button duration check. Host wake is synthetic,
+  // so it always succeeds and the arguments are accepted for signature parity.
+  bool verifyPowerButtonWakeup(uint16_t requiredHoldMs, bool shortPressIsSleep);
 
   // Check if USB is connected
   bool isUsbConnected() const;
