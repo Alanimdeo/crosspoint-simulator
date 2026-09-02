@@ -31,6 +31,9 @@ inline unsigned long micros() {
 }
 
 inline void delay(unsigned long ms) {
+  std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+
 inline void yield() { std::this_thread::yield(); }
 
 // Native builds have no GPIO pins. Treat every input as released, matching the
