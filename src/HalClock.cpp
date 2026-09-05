@@ -33,7 +33,7 @@ bool HalClock::getTime(uint8_t &hour, uint8_t &minute) const {
 }
 
 bool HalClock::getDateTime(uint16_t &year, uint8_t &month, uint8_t &day,
-                           uint8_t &hour, uint8_t &minute) const {
+                           uint8_t &hour, uint8_t &minute, uint8_t &second, uint8_t &weekday) const {
   if (!_available)
     return false;
 
@@ -49,6 +49,8 @@ bool HalClock::getDateTime(uint16_t &year, uint8_t &month, uint8_t &day,
   day = static_cast<uint8_t>(utcTime.tm_mday);
   hour = static_cast<uint8_t>(utcTime.tm_hour);
   minute = static_cast<uint8_t>(utcTime.tm_min);
+  second = static_cast<uint8_t>(utcTime.tm_sec);
+  weekday = static_cast<uint8_t>(utcTime.tm_wday);  // 0=Sunday
   return true;
 }
 
