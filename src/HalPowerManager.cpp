@@ -5,7 +5,7 @@
 HalPowerManager powerManager;
 
 void HalPowerManager::begin() {}
-void HalPowerManager::startDeepSleep(HalGPIO &gpio) const { gpio.startDeepSleep(); }
+void HalPowerManager::startDeepSleep(HalGPIO &gpio, uint64_t /*timerWakeMs*/) const { gpio.startDeepSleep(); }
 void HalPowerManager::setPowerSaving(bool enable) {}
 uint16_t HalPowerManager::getBatteryPercentage() const { return 100; }
 

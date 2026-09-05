@@ -74,3 +74,16 @@ extern "C" uint32_t uzlib_crc32(const void *data, unsigned int length,
   }
   return crc ^ 0xffffffff;
 }
+
+// Deep-sleep wake-source stubs. Deep sleep is emulated by a process relaunch,
+// so there is no real RTC timer. Reporting a power-button wake keeps the
+// firmware on its normal wake path in the simulator.
+#include "esp_sleep.h"
+
+extern "C" esp_sleep_wakeup_cause_t esp_sleep_get_wakeup_cause(void) {
+  return ESP_SLEEP_WAKEUP_GPIO;  // treated as a power-button wake by the firmware
+}
+
+extern "C" esp_err_t esp_sleep_enable_timer_wakeup(uint64_t /*time_in_us*/) {
+  return ESP_OK;
+}
